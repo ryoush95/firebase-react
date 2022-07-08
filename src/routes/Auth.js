@@ -1,18 +1,14 @@
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { authService } from "../myfbase";
 
 const Auth = () => {
-  const auth = getAuth();
+  const auth = authService;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [sc, setSc] = useState(false);
+  // const [sc, setSc] = useState(false);
+  const sc = false;
   const [error, setError] = useState("");
   const onChange = (event) => {
     const {
@@ -27,7 +23,8 @@ const Auth = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     if (sc) {
-      await createUserWithEmailAndPassword(auth, email, password)
+      await auth
+        .createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
@@ -39,7 +36,8 @@ const Auth = () => {
           setError(error.message);
         });
     } else {
-      await signInWithEmailAndPassword(auth, email, password)
+      await auth
+        .signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           console.log(user);
@@ -61,7 +59,7 @@ const Auth = () => {
     if (name === "google") {
       provider = new GoogleAuthProvider();
     }
-    const data = await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
   };
   return (
     <div>
