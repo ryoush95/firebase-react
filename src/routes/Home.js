@@ -1,4 +1,12 @@
-import { addDoc, collection, getDocs, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  Timestamp,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { authService, dbService } from "../myfbase";
 
@@ -7,20 +15,24 @@ const Home = () => {
   const [nwtweet, setNweet] = useState("");
   const [nwtweets, setNweets] = useState([]);
 
-  const getTweet = async () => {
-    const snapshot = await getDocs(collection(db, "nweet"));
-    snapshot.forEach((doc) => {
-      const obj = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      console.log(obj);
-      setNweets((prev) => [obj, ...prev]);
-    });
-  };
-
   useEffect(() => {
-    getTweet();
+    const q = query(collection(db, "nweet"), orderBy("ts", "desc"));
+    onSnapshot(
+      q,
+      (doc) => {
+        // doc.docChanges().forEach((change) => {
+        //   console.log(change.doc.data());
+        // });
+        const array = doc.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        }));
+        setNweets(array);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }, []);
 
   const onSubmit = async (event) => {
@@ -54,7 +66,7 @@ const Home = () => {
         <input type="submit" onClick={onSubmit} />
       </form>
       <br />
-      <div style={{ background: "#" }}>
+      <div style={{ background: "#AAAAAA" }}>
         {nwtweets.map((nweet) => (
           <div key={nweet.id}>
             <span>{nweet.uid}</span>
