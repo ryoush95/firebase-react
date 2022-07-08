@@ -14,6 +14,7 @@ const Navigation = () => {
           <Link to="/profile"> profile</Link>
         </li>
       </ul>
+      <br />
       <Home />
     </div>
   );
