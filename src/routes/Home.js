@@ -1,18 +1,23 @@
 import { addDoc, collection, Timestamp } from "firebase/firestore";
 import React, { useState } from "react";
-import { dbService } from "../myfbase";
+import { authService, dbService } from "../myfbase";
 
 const Home = () => {
+  const db = dbService;
   const [nwtweet, setNweet] = useState("");
   // const [nwtweets, setNweets] = useState([]);
   const onSubmit = async (event) => {
-    event.preventDefault();
-    const docs = await addDoc(collection(dbService, "nweet"), {
-      name: "",
-      tweet: nwtweet,
-      ts: Timestamp.now(),
-    });
-    console.log(docs.id);
+    console.log(event.preventDefault());
+    try {
+      const docs = await addDoc(collection(db, "nweet"), {
+        uid: authService.currentUser.uid,
+        tweet: nwtweet,
+        ts: Timestamp.now(),
+      });
+      console.log(docs.id);
+    } catch (e) {
+      console.log(e);
+    }
   };
   const onChange = (event) => {
     console.log(event.target.value);
@@ -24,10 +29,10 @@ const Home = () => {
         <input
           type="text"
           placeholder="new tweet"
-          maxLength={120}
+          maxLength={10}
           onChange={onChange}
         />
-        <input type="submit" onSubmit={onSubmit} />
+        <input type="submit" onClick={onSubmit} />
       </form>
     </div>
   );
