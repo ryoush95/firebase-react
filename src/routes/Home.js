@@ -1,7 +1,6 @@
 import {
   addDoc,
   collection,
-  limit,
   onSnapshot,
   orderBy,
   query,
@@ -9,6 +8,8 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { authService, dbService } from "../myfbase";
+import Nweet from "../components/Nweet";
+import { getAuth } from "firebase/auth";
 
 const Home = () => {
   const db = dbService;
@@ -68,10 +69,11 @@ const Home = () => {
       <br />
       <div style={{ background: "#AAAAAA" }}>
         {nwtweets.map((nweet) => (
-          <div key={nweet.id}>
-            <span>{nweet.uid}</span>
-            <h4>{nweet.tweet}</h4>
-          </div>
+          <Nweet
+            key={nweet.id}
+            nweetObj={nweet}
+            isOwner={nweet.uid === getAuth().currentUser.uid}
+          />
         ))}
       </div>
     </div>
