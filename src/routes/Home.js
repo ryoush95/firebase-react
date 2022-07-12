@@ -17,7 +17,7 @@ const Home = () => {
   const auth = authService.currentUser;
   const [nwtweet, setNweet] = useState("");
   const [nwtweets, setNweets] = useState([]);
-  const [pic, setPic] = useState();
+  const [pic, setPic] = useState("");
 
   useEffect(() => {
     const q = query(collection(db, "nweet"), orderBy("ts", "desc"));

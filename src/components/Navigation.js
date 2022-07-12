@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Home from "../routes/Home";
+import { authService } from "../myfbase";
 
 const Navigation = () => {
+  const auth = authService.currentUser;
   return (
     <div>
       <span>Home</span>
@@ -11,11 +12,10 @@ const Navigation = () => {
           <Link to="/">home</Link>
         </li>
         <li>
-          <Link to="/profile"> profile</Link>
+          <Link to="/profile">{auth.displayName}'s profile</Link>
         </li>
       </ul>
       <br />
-      <Home />
     </div>
   );
 };

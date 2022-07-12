@@ -17,13 +17,7 @@ function App() {
     });
   }, []);
 
-  return (
-    <>
-      {init ? <AppRouter isLogin={isLogin} /> : "loading"}
-      <br />
-      <footer>2022</footer>
-    </>
-  );
+  return <>{init ? <AppRouter isLogin={isLogin} /> : "loading"}</>;
 }
 
 export default App;
