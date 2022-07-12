@@ -1,8 +1,9 @@
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import React, { useState } from "react";
-import { dbService } from "../myfbase";
+import { dbService, storageService } from "../myfbase";
 
-const Nweet = ({ nweetObj, isOwner }) => {
+const Nweet = ({ nweetObj, isOwner, picUrl }) => {
   const db = dbService;
   const [editing, setEditing] = useState(false);
   const [newNweet, setNweet] = useState(nweetObj.tweet);
@@ -11,6 +12,8 @@ const Nweet = ({ nweetObj, isOwner }) => {
     if (ok) {
       console.log(nweetObj.id);
       await deleteDoc(doc(db, "nweet", nweetObj.id));
+      const deleteRef = ref(storageService, nweetObj.pic);
+      await deleteObject(deleteRef);
     }
   };
   const onSubmit = (e) => {
@@ -42,6 +45,7 @@ const Nweet = ({ nweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{nweetObj.tweet}</h4>
+          {picUrl && <img src={picUrl} width="50px" height="50px" />}
           {isOwner ? (
             <>
               <button onClick={onToggle}>update</button>
